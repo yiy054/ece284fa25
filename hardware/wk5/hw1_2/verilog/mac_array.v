@@ -18,7 +18,7 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
   wire [psum_bw*col-1:0] row_out_s [row-1:0];
 
   genvar i;
-  for (i=1; i < row+1 ; i=i+1) begin : row_num
+  for (i=0; i < row ; i=i+1) begin : row_num
       mac_row #(.bw(bw), .psum_bw(psum_bw)) mac_row_instance (
         .clk(clk),
         .reset(reset),

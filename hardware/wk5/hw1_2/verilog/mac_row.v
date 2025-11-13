@@ -19,7 +19,7 @@ module mac_row (clk, out_s, in_w, in_n, valid, inst_w, reset);
   assign temp[bw-1:0]   = in_w;
 
   genvar i;
-  for (i=1; i < col+1 ; i=i+1) begin : col_num
+  for (i=0; i < col ; i=i+1) begin : col_num
       mac_tile #(.bw(bw), .psum_bw(psum_bw)) mac_tile_instance (
         .clk(clk),
         .reset(reset),
