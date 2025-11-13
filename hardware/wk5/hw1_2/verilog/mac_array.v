@@ -14,20 +14,29 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
   input  [psum_bw*col-1:0] in_n;
   output [col-1:0] valid;
 
+  wire [col-1:0] row_valid [row-1:0];
+  wire [psum_bw*col-1:0] row_out_s [row-1:0];
+
+  genvar i;
   for (i=1; i < row+1 ; i=i+1) begin : row_num
       mac_row #(.bw(bw), .psum_bw(psum_bw)) mac_row_instance (
-      ...
-      ...
+        .clk(clk),
+        .reset(reset),
+        .in_w(in_w[bw*(i+1)-1:bw*i]),
+        .in_n(in_n),
+        .valid(row_valid[i]),
+        .inst_w(inst_w),
+        .out_s(row_out_s[i])
       );
   end
 
-  always @ (posedge clk) begin
+  // always @ (posedge clk) begin
 
 
-   // inst_w flows to row0 to row7
+  //  // inst_w flows to row0 to row7
  
-  end
-
-
+  // end
+  assign out_s = row_out_s[row-1];
+  assign valid = row_valid[row-1];
 
 endmodule

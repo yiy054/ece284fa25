@@ -14,8 +14,13 @@ input  [psum_bw-1:0] in_n;
 input  clk;
 input  reset;
 
-...
-...
+reg [1:0] inst_q;
+reg [bw-1:0] a_q;
+reg [bw-1:0] b_q;
+reg [psum_bw-1:0] c_q;
+reg load_ready_q;
+
+wire [psum_bw-1:0] mac_out;
 
 mac #(.bw(bw), .psum_bw(psum_bw)) mac_instance (
         .a(a_q), 
@@ -24,7 +29,38 @@ mac #(.bw(bw), .psum_bw(psum_bw)) mac_instance (
 	.out(mac_out)
 ); 
 
-...
-...
+
+always @(posedge clk) begin
+    if (reset) begin
+        // When reset is active
+        inst_q <= 2'b00;
+        load_ready_q <= 1'b1;
+        a_q <= 0;
+        b_q <= 0;
+        c_q <= 0;
+    end else begin
+        inst_q[1] <= inst_w[1];
+        
+        if (inst_w[0] || inst_w[1]) begin
+            a_q <= in_w;
+        end
+
+        if (inst_w[0] && load_ready_q) begin
+            b_q <= in_w;
+            load_ready_q <= 1'b0;
+        end
+
+        if (load_ready_q == 1'b0) begin
+            inst_q[0] <= inst_w[0];
+        end
+
+        inst_e <= inst_q;
+    end
+end
+
+always @(posedge clk) begin
+    out_e <= a_q;
+    out_s <= mac_out;
+end
 
 endmodule
