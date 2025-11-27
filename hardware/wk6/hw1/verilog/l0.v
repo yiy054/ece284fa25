@@ -19,15 +19,6 @@ module l0 (clk, in, out, rd, wr, o_full, reset, o_ready);
    // read_mode: 1 => read all rows at once; 2 => read one row at a time (rotating)
    parameter read_mode = 1;
   
-   input  clk;
-   input  wr;
-   input  rd;
-   input  reset;
-   input  [row*bw-1:0] in;
-   output [row*bw-1:0] out;
-   output o_full;
-   output o_ready;
-  
    wire [row-1:0] empty;
    wire [row-1:0] full;
    reg [row-1:0] rd_en;
